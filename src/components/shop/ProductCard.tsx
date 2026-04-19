@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/data/types";
 import { formatPrice } from "@/lib/format";
@@ -10,6 +11,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, className }: ProductCardProps) => {
+  const { t } = useTranslation();
   const onSale = product.compareAtPrice && product.compareAtPrice > product.price;
 
   return (
@@ -36,14 +38,14 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
           )}
           {onSale && (
             <span className="absolute right-3 top-3 rounded-sm bg-destructive px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-destructive-foreground">
-              Sale
+              {t("common.sale")}
             </span>
           )}
         </div>
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-eyebrow">{product.brand === "universal" ? "Universal" : product.brand.toUpperCase()}</p>
+        <p className="text-eyebrow">{product.brand === "universal" ? t("common.universal") : product.brand.toUpperCase()}</p>
         <Link to={`/product/${product.slug}`}>
           <h3 className="line-clamp-2 font-display text-base font-medium leading-tight transition-colors group-hover:text-muted-foreground">
             {product.name}
@@ -63,7 +65,7 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
             </span>
           </div>
           <Button asChild size="sm" variant="outline">
-            <Link to={`/product/${product.slug}`}>View</Link>
+            <Link to={`/product/${product.slug}`}>{t("common.view")}</Link>
           </Button>
         </div>
       </div>

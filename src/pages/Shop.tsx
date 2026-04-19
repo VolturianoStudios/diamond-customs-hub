@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ProductGrid } from "@/components/shop/ProductGrid";
@@ -12,6 +13,7 @@ const Shop = () => {
   const activeCategory = params.get("category") ?? "all";
   const activeBrand = params.get("brand") ?? "all";
   const [sort, setSort] = useState<"featured" | "price-asc" | "price-desc">("featured");
+  const { t } = useTranslation();
 
   const filtered = useMemo(() => {
     let list = [...PRODUCTS];
@@ -33,18 +35,18 @@ const Shop = () => {
   return (
     <SiteLayout>
       <PageHeader
-        eyebrow="Catalog"
-        title="All Products"
-        description="Every part in the Diamond Customs collection."
+        eyebrow={t("shop.eyebrow")}
+        title={t("shop.title")}
+        description={t("shop.description")}
       />
 
       <section className="container-tight py-12">
         {/* Filters */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-eyebrow mr-2">Category:</span>
+            <span className="text-eyebrow mr-2">{t("shop.category")}</span>
             <FilterChip active={activeCategory === "all"} onClick={() => setParam("category", "all")}>
-              All
+              {t("shop.all")}
             </FilterChip>
             {CATEGORIES.map((c) => (
               <FilterChip
@@ -58,9 +60,9 @@ const Shop = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-eyebrow mr-2">Brand:</span>
+            <span className="text-eyebrow mr-2">{t("shop.brand")}</span>
             <FilterChip active={activeBrand === "all"} onClick={() => setParam("brand", "all")}>
-              All
+              {t("shop.all")}
             </FilterChip>
             {CAR_BRANDS.map((b) => (
               <FilterChip
@@ -75,21 +77,21 @@ const Shop = () => {
 
           <div className="flex items-center justify-between border-t border-border pt-4">
             <p className="text-sm text-muted-foreground">
-              {filtered.length} product{filtered.length === 1 ? "" : "s"}
+              {t("shop.productsCount", { count: filtered.length })}
             </p>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)}
               className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
-              <option value="featured">Featured</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
+              <option value="featured">{t("shop.sortFeatured")}</option>
+              <option value="price-asc">{t("shop.sortPriceAsc")}</option>
+              <option value="price-desc">{t("shop.sortPriceDesc")}</option>
             </select>
           </div>
         </div>
 
-        <ProductGrid products={filtered} emptyMessage="No products match these filters." />
+        <ProductGrid products={filtered} emptyMessage={t("shop.emptyFilters")} />
       </section>
     </SiteLayout>
   );

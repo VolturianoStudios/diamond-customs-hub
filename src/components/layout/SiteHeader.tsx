@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, ShoppingBag, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CAR_BRANDS, CATEGORIES } from "@/data/catalog";
 import { useCart } from "@/context/CartContext";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,6 +19,7 @@ import { cn } from "@/lib/utils";
 export const SiteHeader = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { itemCount } = useCart();
+  const { t } = useTranslation();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur-md">
@@ -28,7 +31,7 @@ export const SiteHeader = () => {
           <NavigationMenuList className="gap-1">
             <NavigationMenuItem>
               <NavigationMenuTrigger className="bg-transparent text-sm font-medium uppercase tracking-wider">
-                Shop by Car
+                {t("nav.shopByCar")}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[280px] gap-1 p-3">
@@ -51,7 +54,7 @@ export const SiteHeader = () => {
 
             <NavigationMenuItem>
               <NavigationMenuTrigger className="bg-transparent text-sm font-medium uppercase tracking-wider">
-                Categories
+                {t("nav.categories")}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[420px] grid-cols-2 gap-1 p-3">
@@ -77,7 +80,7 @@ export const SiteHeader = () => {
                 to="/shop"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors hover:text-muted-foreground"
               >
-                All Products
+                {t("nav.allProducts")}
               </Link>
             </NavigationMenuItem>
 
@@ -86,7 +89,7 @@ export const SiteHeader = () => {
                 to="/about"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors hover:text-muted-foreground"
               >
-                About
+                {t("nav.about")}
               </Link>
             </NavigationMenuItem>
 
@@ -95,15 +98,17 @@ export const SiteHeader = () => {
                 to="/contact"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium uppercase tracking-wider transition-colors hover:text-muted-foreground"
               >
-                Contact
+                {t("nav.contact")}
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <LanguageToggle />
+
           <Button asChild variant="ghost" size="icon" className="relative">
-            <Link to="/cart" aria-label="Open cart">
+            <Link to="/cart" aria-label={t("nav.openCart")}>
               <ShoppingBag className="h-5 w-5" />
               {itemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
@@ -118,7 +123,7 @@ export const SiteHeader = () => {
             size="icon"
             className="lg:hidden"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Toggle navigation"
+            aria-label={t("nav.toggleNav")}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -135,7 +140,7 @@ export const SiteHeader = () => {
       >
         <div className="container-tight space-y-6 py-6">
           <div>
-            <p className="text-eyebrow mb-3">Shop by Car</p>
+            <p className="text-eyebrow mb-3">{t("nav.shopByCar")}</p>
             <ul className="grid grid-cols-2 gap-2">
               {CAR_BRANDS.map((b) => (
                 <li key={b.slug}>
@@ -152,7 +157,7 @@ export const SiteHeader = () => {
           </div>
 
           <div>
-            <p className="text-eyebrow mb-3">Categories</p>
+            <p className="text-eyebrow mb-3">{t("nav.categories")}</p>
             <ul className="space-y-1">
               {CATEGORIES.map((c) => (
                 <li key={c.slug}>
@@ -170,9 +175,9 @@ export const SiteHeader = () => {
 
           <div className="flex flex-col gap-2 border-t border-border pt-4">
             {[
-              { to: "/shop", label: "All Products" },
-              { to: "/about", label: "About" },
-              { to: "/contact", label: "Contact" },
+              { to: "/shop", label: t("nav.allProducts") },
+              { to: "/about", label: t("nav.about") },
+              { to: "/contact", label: t("nav.contact") },
             ].map((l) => (
               <Link
                 key={l.to}
