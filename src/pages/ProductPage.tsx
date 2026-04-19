@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -15,14 +16,15 @@ const ProductPage = () => {
   const product = getProductBySlug(slug);
   const { add } = useCart();
   const [qty, setQty] = useState(1);
+  const { t } = useTranslation();
 
   if (!product) {
     return (
       <SiteLayout>
         <div className="container-tight py-32 text-center">
-          <h1 className="font-display text-3xl font-semibold">Product not found</h1>
+          <h1 className="font-display text-3xl font-semibold">{t("product.notFound")}</h1>
           <Button asChild className="mt-6">
-            <Link to="/shop">Back to shop</Link>
+            <Link to="/shop">{t("common.backToShop")}</Link>
           </Button>
         </div>
       </SiteLayout>
@@ -42,7 +44,7 @@ const ProductPage = () => {
           to="/shop"
           className="inline-flex items-center text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="mr-2 h-3 w-3" /> Back to shop
+          <ArrowLeft className="mr-2 h-3 w-3" /> {t("common.backToShop")}
         </Link>
       </section>
 
@@ -59,7 +61,7 @@ const ProductPage = () => {
 
         <div className="flex flex-col">
           <p className="text-eyebrow mb-2">
-            {product.brand === "universal" ? "Universal" : product.brand.toUpperCase()}
+            {product.brand === "universal" ? t("common.universal") : product.brand.toUpperCase()}
           </p>
           <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
             {product.name}
@@ -80,13 +82,12 @@ const ProductPage = () => {
 
           <Separator className="my-8" />
 
-          {/* Quantity + add */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="inline-flex items-center rounded-md border border-border">
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                 className="flex h-11 w-11 items-center justify-center hover:bg-accent"
-                aria-label="Decrease quantity"
+                aria-label={t("product.decrease")}
               >
                 <Minus className="h-4 w-4" />
               </button>
@@ -94,7 +95,7 @@ const ProductPage = () => {
               <button
                 onClick={() => setQty((q) => q + 1)}
                 className="flex h-11 w-11 items-center justify-center hover:bg-accent"
-                aria-label="Increase quantity"
+                aria-label={t("product.increase")}
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -105,27 +106,26 @@ const ProductPage = () => {
               className="flex-1"
               onClick={() => {
                 add(product.id, qty);
-                toast.success(`${product.name} added to cart`);
+                toast.success(t("product.addedToCart", { name: product.name }));
               }}
               disabled={!product.inStock}
             >
-              {product.inStock ? "Add to cart" : "Out of stock"}
+              {product.inStock ? t("product.addToCart") : t("product.outOfStock")}
             </Button>
           </div>
 
-          {/* Reassurance */}
           <ul className="mt-8 space-y-3 text-sm">
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-foreground" />
-              In stock — ships within 24 hours
+              {t("product.inStock")}
             </li>
             <li className="flex items-center gap-2">
               <Truck className="h-4 w-4 text-foreground" />
-              Free shipping on orders over 1500 SEK
+              {t("product.freeShipping")}
             </li>
             <li className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-foreground" />
-              30-day return guarantee
+              {t("product.returns")}
             </li>
           </ul>
         </div>
@@ -134,9 +134,9 @@ const ProductPage = () => {
       {related.length > 0 && (
         <section className="border-t border-border bg-secondary">
           <div className="container-tight py-16">
-            <p className="text-eyebrow mb-3">You may also like</p>
+            <p className="text-eyebrow mb-3">{t("product.relatedEyebrow")}</p>
             <h2 className="mb-8 font-display text-2xl font-semibold tracking-tight md:text-3xl">
-              Related products
+              {t("product.relatedTitle")}
             </h2>
             <ProductGrid products={related} />
           </div>

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ const Checkout = () => {
   const { detailed, subtotal, itemCount, clear } = useCart();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const shipping = subtotal >= 1500 ? 0 : 99;
   const total = subtotal + shipping;
@@ -21,10 +23,10 @@ const Checkout = () => {
   if (itemCount === 0) {
     return (
       <SiteLayout>
-        <PageHeader eyebrow="Checkout" title="Nothing to check out" />
+        <PageHeader eyebrow={t("checkout.eyebrow")} title={t("checkout.emptyTitle")} />
         <section className="container-tight py-16 text-center">
           <Button asChild size="lg">
-            <Link to="/shop">Browse products</Link>
+            <Link to="/shop">{t("checkout.browse")}</Link>
           </Button>
         </section>
       </SiteLayout>
@@ -34,9 +36,8 @@ const Checkout = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    // Placeholder: integrate Lovable Cloud + payments later.
     setTimeout(() => {
-      toast.success("Order placed! (demo)");
+      toast.success(t("checkout.orderPlaced"));
       clear();
       navigate("/");
     }, 800);
@@ -44,44 +45,44 @@ const Checkout = () => {
 
   return (
     <SiteLayout>
-      <PageHeader eyebrow="Checkout" title="Complete your order" />
+      <PageHeader eyebrow={t("checkout.eyebrow")} title={t("checkout.title")} />
 
       <section className="container-tight grid gap-12 py-12 lg:grid-cols-[1fr_400px]">
         <form onSubmit={handleSubmit} className="space-y-8">
           <fieldset className="space-y-4">
-            <legend className="font-display text-lg font-semibold">Contact</legend>
+            <legend className="font-display text-lg font-semibold">{t("checkout.contact")}</legend>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field id="email" label="Email" type="email" required />
-              <Field id="phone" label="Phone" type="tel" />
+              <Field id="email" label={t("checkout.email")} type="email" required />
+              <Field id="phone" label={t("checkout.phone")} type="tel" />
             </div>
           </fieldset>
 
           <fieldset className="space-y-4">
-            <legend className="font-display text-lg font-semibold">Shipping address</legend>
+            <legend className="font-display text-lg font-semibold">{t("checkout.shippingAddress")}</legend>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field id="firstName" label="First name" required />
-              <Field id="lastName" label="Last name" required />
-              <Field id="address" label="Street address" required className="sm:col-span-2" />
-              <Field id="postal" label="Postal code" required />
-              <Field id="city" label="City" required />
-              <Field id="country" label="Country" defaultValue="Sweden" required className="sm:col-span-2" />
+              <Field id="firstName" label={t("checkout.firstName")} required />
+              <Field id="lastName" label={t("checkout.lastName")} required />
+              <Field id="address" label={t("checkout.address")} required className="sm:col-span-2" />
+              <Field id="postal" label={t("checkout.postal")} required />
+              <Field id="city" label={t("checkout.city")} required />
+              <Field id="country" label={t("checkout.country")} defaultValue={t("checkout.countryDefault")} required className="sm:col-span-2" />
             </div>
           </fieldset>
 
           <fieldset className="space-y-4">
-            <legend className="font-display text-lg font-semibold">Payment</legend>
+            <legend className="font-display text-lg font-semibold">{t("checkout.payment")}</legend>
             <div className="rounded-md border border-dashed border-border bg-secondary p-6 text-center text-sm text-muted-foreground">
-              Payment integration is not connected yet. This is a frontend skeleton.
+              {t("checkout.paymentNote")}
             </div>
           </fieldset>
 
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Placing order…" : `Place order — ${formatPrice(total)}`}
+            {submitting ? t("checkout.placing") : t("checkout.placeOrder", { total: formatPrice(total) })}
           </Button>
         </form>
 
         <aside className="h-fit rounded-md border border-border bg-card p-6">
-          <h2 className="font-display text-lg font-semibold">Your order</h2>
+          <h2 className="font-display text-lg font-semibold">{t("checkout.yourOrder")}</h2>
           <Separator className="my-4" />
           <ul className="space-y-3 text-sm">
             {detailed.map(({ product, quantity, lineTotal }) => (
@@ -96,17 +97,17 @@ const Checkout = () => {
           <Separator className="my-4" />
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Subtotal</dt>
+              <dt className="text-muted-foreground">{t("cart.subtotal")}</dt>
               <dd>{formatPrice(subtotal)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Shipping</dt>
-              <dd>{shipping === 0 ? "Free" : formatPrice(shipping)}</dd>
+              <dt className="text-muted-foreground">{t("cart.shipping")}</dt>
+              <dd>{shipping === 0 ? t("common.free") : formatPrice(shipping)}</dd>
             </div>
           </dl>
           <Separator className="my-4" />
           <div className="flex justify-between font-display text-base font-semibold">
-            <span>Total</span>
+            <span>{t("cart.total")}</span>
             <span>{formatPrice(total)}</span>
           </div>
         </aside>

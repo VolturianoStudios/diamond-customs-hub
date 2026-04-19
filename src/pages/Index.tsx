@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowRight, Sparkles, Truck, ShieldCheck } from "lucide-react";
 import heroImage from "@/assets/hero.jpg";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { CAR_BRANDS, CATEGORIES, getFeaturedProducts } from "@/data/catalog";
 
 const Index = () => {
   const featured = getFeaturedProducts();
+  const { t } = useTranslation();
 
   return (
     <SiteLayout>
@@ -23,19 +25,19 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="container-tight relative z-10 flex min-h-[78vh] flex-col justify-end pb-16 pt-32 md:pb-24">
           <div className="max-w-2xl animate-fade-in-up">
-            <p className="text-eyebrow mb-4 text-white/70">Diamond Customs</p>
+            <p className="text-eyebrow mb-4 text-white/70">{t("home.brandEyebrow")}</p>
             <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-              Premium parts.
+              {t("home.heroTitle")}
               <br />
-              <span className="text-white/60">Engineered to stand out.</span>
+              <span className="text-white/60">{t("home.heroTitleAccent")}</span>
             </h1>
             <p className="mt-6 max-w-xl text-base text-white/70 md:text-lg">
-              Curated modifications and accessories for enthusiasts who care about every detail.
+              {t("home.heroDescription")}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" variant="secondary" className="group">
                 <Link to="/shop">
-                  Shop the collection
+                  {t("home.shopCollection")}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -45,7 +47,7 @@ const Index = () => {
                 variant="outline"
                 className="border-white/30 bg-transparent text-white hover:bg-white hover:text-brand-black"
               >
-                <Link to="/about">Our story</Link>
+                <Link to="/about">{t("home.ourStory")}</Link>
               </Button>
             </div>
           </div>
@@ -56,9 +58,9 @@ const Index = () => {
       <section className="border-b border-border bg-background">
         <div className="container-tight grid gap-6 py-8 sm:grid-cols-3">
           {[
-            { icon: ShieldCheck, title: "Premium quality", text: "Hand-picked, road-tested parts." },
-            { icon: Truck, title: "Fast shipping", text: "Dispatched within 24 hours." },
-            { icon: Sparkles, title: "Built for enthusiasts", text: "By people who actually drive." },
+            { icon: ShieldCheck, title: t("home.trust.qualityTitle"), text: t("home.trust.qualityText") },
+            { icon: Truck, title: t("home.trust.shippingTitle"), text: t("home.trust.shippingText") },
+            { icon: Sparkles, title: t("home.trust.enthusiastsTitle"), text: t("home.trust.enthusiastsText") },
           ].map((f) => (
             <div key={f.title} className="flex items-start gap-3">
               <f.icon className="mt-0.5 h-5 w-5" />
@@ -75,16 +77,16 @@ const Index = () => {
       <section className="container-tight py-16 md:py-24">
         <div className="mb-10 flex items-end justify-between gap-6">
           <div>
-            <p className="text-eyebrow mb-3">Shop by Car</p>
+            <p className="text-eyebrow mb-3">{t("home.shopByCarEyebrow")}</p>
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              Find what fits your ride
+              {t("home.shopByCarTitle")}
             </h2>
           </div>
           <Link
             to="/shop"
             className="hidden text-sm font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground md:inline-flex"
           >
-            View all →
+            {t("common.viewAll")} →
           </Link>
         </div>
 
@@ -97,7 +99,7 @@ const Index = () => {
             >
               <span className="font-display text-xl font-semibold tracking-wide">{brand.name}</span>
               <span className="mt-2 text-xs text-muted-foreground transition-colors group-hover:text-foreground">
-                Shop →
+                {t("common.shop")} →
               </span>
             </Link>
           ))}
@@ -108,9 +110,9 @@ const Index = () => {
       <section className="bg-secondary">
         <div className="container-tight py-16 md:py-24">
           <div className="mb-10">
-            <p className="text-eyebrow mb-3">Categories</p>
+            <p className="text-eyebrow mb-3">{t("home.categoriesEyebrow")}</p>
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              Browse the catalog
+              {t("home.categoriesTitle")}
             </h2>
           </div>
 
@@ -126,7 +128,7 @@ const Index = () => {
                   <p className="mt-2 text-sm text-muted-foreground">{cat.description}</p>
                 </div>
                 <span className="mt-6 inline-flex items-center text-sm font-medium uppercase tracking-wider">
-                  Explore <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  {t("common.explore")} <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
             ))}
@@ -138,36 +140,36 @@ const Index = () => {
       <section className="container-tight py-16 md:py-24">
         <div className="mb-10 flex items-end justify-between gap-6">
           <div>
-            <p className="text-eyebrow mb-3">Featured</p>
+            <p className="text-eyebrow mb-3">{t("home.featuredEyebrow")}</p>
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              Customer favorites
+              {t("home.featuredTitle")}
             </h2>
           </div>
           <Link
             to="/shop"
             className="hidden text-sm font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground md:inline-flex"
           >
-            View all →
+            {t("common.viewAll")} →
           </Link>
         </div>
-        <ProductGrid products={featured} emptyMessage="No featured products yet." />
+        <ProductGrid products={featured} />
       </section>
 
       {/* CTA */}
       <section className="bg-brand-black text-brand-white">
         <div className="container-tight grid gap-8 py-16 md:grid-cols-2 md:py-24">
           <div>
-            <p className="text-eyebrow mb-3 text-white/60">Bigger build?</p>
+            <p className="text-eyebrow mb-3 text-white/60">{t("home.ctaEyebrow")}</p>
             <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              Custom installs at our workshop.
+              {t("home.ctaTitle")}
             </h2>
             <p className="mt-4 max-w-md text-white/70">
-              From full ambient lighting builds to chrome delete and emblem swaps — we handle it all.
+              {t("home.ctaText")}
             </p>
           </div>
           <div className="flex items-end md:justify-end">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/contact">Book a consultation</Link>
+              <Link to="/contact">{t("home.ctaButton")}</Link>
             </Button>
           </div>
         </div>

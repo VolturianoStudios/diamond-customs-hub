@@ -1,20 +1,23 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
 import { CATEGORIES, CAR_BRANDS } from "@/data/catalog";
 
 export const SiteFooter = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="border-t border-border bg-brand-black text-brand-white">
       <div className="container-tight grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <Logo variant="light" />
           <p className="max-w-xs text-sm leading-relaxed text-white/60">
-            Premium modifications and accessories — built by enthusiasts, for enthusiasts.
+            {t("footer.tagline")}
           </p>
         </div>
 
         <div>
-          <p className="text-eyebrow mb-4 text-white/50">Categories</p>
+          <p className="text-eyebrow mb-4 text-white/50">{t("footer.categories")}</p>
           <ul className="space-y-2 text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
@@ -27,7 +30,7 @@ export const SiteFooter = () => {
         </div>
 
         <div>
-          <p className="text-eyebrow mb-4 text-white/50">Brands</p>
+          <p className="text-eyebrow mb-4 text-white/50">{t("footer.brands")}</p>
           <ul className="space-y-2 text-sm">
             {CAR_BRANDS.map((b) => (
               <li key={b.slug}>
@@ -40,21 +43,21 @@ export const SiteFooter = () => {
         </div>
 
         <div>
-          <p className="text-eyebrow mb-4 text-white/50">Company</p>
+          <p className="text-eyebrow mb-4 text-white/50">{t("footer.company")}</p>
           <ul className="space-y-2 text-sm">
             <li>
               <Link to="/about" className="text-white/70 hover:text-white">
-                About
+                {t("nav.about")}
               </Link>
             </li>
             <li>
               <Link to="/contact" className="text-white/70 hover:text-white">
-                Contact
+                {t("nav.contact")}
               </Link>
             </li>
             <li>
               <Link to="/shop" className="text-white/70 hover:text-white">
-                Shop all
+                {t("footer.shopAll")}
               </Link>
             </li>
           </ul>
@@ -63,8 +66,8 @@ export const SiteFooter = () => {
 
       <div className="border-t border-white/10">
         <div className="container-tight flex flex-col items-start justify-between gap-2 py-6 text-xs text-white/40 md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Diamond Customs. All rights reserved.</p>
-          <p>Designed in Sweden.</p>
+          <p>© {new Date().getFullYear()} Diamond Customs. {t("footer.rights")}</p>
+          <p>{t("footer.designedIn")}</p>
         </div>
       </div>
     </footer>
