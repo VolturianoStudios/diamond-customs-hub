@@ -14,6 +14,7 @@ import Checkout from "./pages/Checkout.tsx";
 import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import IntroVideo from "./components/IntroVideo";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <IntroVideo />
       <BrowserRouter>
         <CartProvider>
           <Routes>
