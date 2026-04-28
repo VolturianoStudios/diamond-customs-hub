@@ -3,13 +3,8 @@ import { useEffect, useRef, useState } from "react";
 const VIDEO_URL =
   "https://bfmqeuczlipocjqtzawj.supabase.co/storage/v1/object/public/VideoBackgroundsLandingpages/Open_gate_drone_flight_garage_202604281941.mp4";
 
-const SESSION_KEY = "dc-intro-played";
-
 export const IntroVideo = () => {
-  const [show, setShow] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem(SESSION_KEY) !== "1";
-  });
+  const [show, setShow] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -35,7 +30,6 @@ export const IntroVideo = () => {
   }, [show]);
 
   const finish = () => {
-    sessionStorage.setItem(SESSION_KEY, "1");
     setFadeOut(true);
     window.setTimeout(() => setShow(false), 900);
   };
