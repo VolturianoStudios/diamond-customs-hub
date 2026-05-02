@@ -6,7 +6,10 @@
     "about": "Om oss",
     "contact": "Kontakt",
     "openCart": "Öppna kundvagn",
-    "toggleNav": "Växla navigation"
+    "toggleNav": "Växla navigation",
+    "showCatalog": "Visa katalog",
+    "search": "Sök",
+    "promo": "Större projekt med bilen? Hör av dig — vi bygger custom."
   },
   "common": {
     "shop": "Shoppa",
