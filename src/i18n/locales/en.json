@@ -6,7 +6,10 @@
     "about": "About",
     "contact": "Contact",
     "openCart": "Open cart",
-    "toggleNav": "Toggle navigation"
+    "toggleNav": "Toggle navigation",
+    "showCatalog": "Show catalog",
+    "search": "Search",
+    "promo": "Bigger project with your car? Get in touch — we build custom."
   },
   "common": {
     "shop": "Shop",
