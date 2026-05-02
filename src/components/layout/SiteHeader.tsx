@@ -17,6 +17,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
+const CATEGORY_STRIP = [
+  { slug: "badges", label: "Badges" },
+  { slug: "steering-wheels", label: "Steering" },
+  { slug: "multimedia", label: "Screens" },
+  { slug: "door-lights", label: "Door Lights" },
+  { slug: "ambient-lighting", label: "Ambient" },
+  { slug: "cleaning", label: "Detailing" },
+];
+
 export const SiteHeader = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { itemCount } = useCart();
@@ -135,19 +144,19 @@ export const SiteHeader = () => {
 
       {/* Secondary category strip */}
       <div className="hidden border-b border-border bg-background lg:block">
-        <div className="container-tight flex h-12 items-center justify-center gap-8">
-          {CATEGORIES.slice(0, 6).map((c) => (
+        <div className="container-tight flex h-11 items-center justify-center gap-7 whitespace-nowrap">
+          {CATEGORY_STRIP.map((c) => (
             <Link
               key={c.slug}
               to={`/category/${c.slug}`}
-              className="text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:text-muted-foreground"
+              className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground transition-colors hover:text-muted-foreground"
             >
-              {c.name}
+              {c.label}
             </Link>
           ))}
           <Link
             to="/shop"
-            className="text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors hover:text-muted-foreground"
+            className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground transition-colors hover:text-muted-foreground"
           >
             {t("nav.allProducts")}
           </Link>
