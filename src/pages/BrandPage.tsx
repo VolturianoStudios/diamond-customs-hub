@@ -29,7 +29,13 @@ const BrandPage = () => {
     <SiteLayout>
       <section className="border-b border-border bg-secondary">
         <div className="container-tight flex items-center gap-10 py-12 md:gap-14 md:py-16">
-          <BrandLogo brand={brand} size="sm" className="h-40 w-40 shrink-0 md:h-52 md:w-52" />
+          <img
+            src={brand.logo.original}
+            srcSet={`${brand.logo.optimized} 640w, ${brand.logo.original} 1280w`}
+            sizes="(max-width: 768px) 192px, 288px"
+            alt={`${brand.name} logo`}
+            className="h-48 w-48 shrink-0 object-contain md:h-72 md:w-72"
+          />
           <div className="flex flex-col gap-3">
             <p className="text-eyebrow">{t("brand.eyebrow")}</p>
             {brand.tagline && (
