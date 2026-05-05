@@ -29,7 +29,7 @@ const BrandPage = () => {
     <SiteLayout>
       <section className="border-b border-border bg-secondary">
         <div className="container-tight flex items-center gap-6 py-8 md:gap-8 md:py-10">
-          <BrandLogo brand={brand} size="sm" className="h-16 w-16 shrink-0 md:h-20 md:w-20" />
+          <BrandLogo brand={brand} size="sm" className="h-28 w-28 shrink-0 md:h-36 md:w-36" />
           <div className="flex flex-col gap-1">
             <p className="text-eyebrow">{t("brand.eyebrow")}</p>
             {brand.tagline && (
