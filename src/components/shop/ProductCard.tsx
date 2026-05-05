@@ -1,18 +1,41 @@
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import type { Product } from "@/data/types";
-import { formatPrice } from "@/lib/format";
+import { useCartStore } from "@/stores/cartStore";
+import { formatShopifyPrice, type ShopifyProduct } from "@/lib/shopify";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface ProductCardProps {
-  product: Product;
+  product: ShopifyProduct;
   className?: string;
 }
 
 export const ProductCard = ({ product, className }: ProductCardProps) => {
   const { t } = useTranslation();
-  const onSale = product.compareAtPrice && product.compareAtPrice > product.price;
+  const addItem = useCartStore((s) => s.addItem);
+  const isLoading = useCartStore((s) => s.isLoading);
+  const node = product.node;
+  const variant = node.variants.edges[0]?.node;
+  const image = node.images.edges[0]?.node;
+  const price = node.priceRange.minVariantPrice;
+  const compareAt = variant?.compareAtPrice;
+  const onSale = compareAt && parseFloat(compareAt.amount) > parseFloat(price.amount);
+
+  const handleAdd = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!variant) return;
+    await addItem({
+      product,
+      variantId: variant.id,
+      variantTitle: variant.title,
+      price: variant.price,
+      quantity: 1,
+      selectedOptions: variant.selectedOptions || [],
+    });
+    toast.success(t("product.addedToCart", { name: node.title }));
+  };
 
   return (
     <article
@@ -21,20 +44,19 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
         className,
       )}
     >
-      <Link to={`/product/${product.slug}`} className="block">
+      <Link to={`/product/${node.handle}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-muted">
-          <img
-            src={product.images[0] ?? "/placeholder.svg"}
-            alt={product.name}
-            loading="lazy"
-            width={600}
-            height={600}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          {product.badge && (
-            <span className="absolute left-3 top-3 rounded-sm bg-primary px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-              {product.badge}
-            </span>
+          {image ? (
+            <img
+              src={image.url}
+              alt={image.altText ?? node.title}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+              {node.title}
+            </div>
           )}
           {onSale && (
             <span className="absolute right-3 top-3 rounded-sm bg-destructive px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-destructive-foreground">
@@ -45,27 +67,35 @@ export const ProductCard = ({ product, className }: ProductCardProps) => {
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-eyebrow">{product.brand === "universal" ? t("common.universal") : product.brand.toUpperCase()}</p>
-        <Link to={`/product/${product.slug}`}>
+        {node.vendor && <p className="text-eyebrow">{node.vendor}</p>}
+        <Link to={`/product/${node.handle}`}>
           <h3 className="line-clamp-2 font-display text-base font-medium leading-tight transition-colors group-hover:text-muted-foreground">
-            {product.name}
+            {node.title}
           </h3>
         </Link>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{product.shortDescription}</p>
+        {node.description && (
+          <p className="line-clamp-2 text-sm text-muted-foreground">{node.description}</p>
+        )}
 
-        <div className="mt-auto flex items-end justify-between pt-3">
+        <div className="mt-auto flex items-end justify-between gap-2 pt-3">
           <div>
             {onSale && (
               <span className="mr-2 text-xs text-muted-foreground line-through">
-                {formatPrice(product.compareAtPrice!, product.currency)}
+                {formatShopifyPrice(compareAt!)}
               </span>
             )}
             <span className="font-display text-lg font-semibold">
-              {formatPrice(product.price, product.currency)}
+              {formatShopifyPrice(price)}
             </span>
           </div>
-          <Button asChild size="sm" variant="outline">
-            <Link to={`/product/${product.slug}`}>{t("common.view")}</Link>
+          <Button size="sm" onClick={handleAdd} disabled={isLoading || !variant?.availableForSale}>
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : variant?.availableForSale ? (
+              t("product.addToCart")
+            ) : (
+              t("product.outOfStock")
+            )}
           </Button>
         </div>
       </div>

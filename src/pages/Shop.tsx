@@ -5,7 +5,9 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, CAR_BRANDS, PRODUCTS } from "@/data/catalog";
+import { CATEGORIES, CAR_BRANDS } from "@/data/catalog";
+import { CATEGORY_TYPE, BRAND_VENDOR } from "@/lib/shopify";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { cn } from "@/lib/utils";
 
 const Shop = () => {
@@ -15,15 +17,24 @@ const Shop = () => {
   const [sort, setSort] = useState<"featured" | "price-asc" | "price-desc">("featured");
   const { t } = useTranslation();
 
+  const { data: products = [], isLoading } = useShopifyProducts();
+
   const filtered = useMemo(() => {
-    let list = [...PRODUCTS];
-    if (activeCategory !== "all") list = list.filter((p) => p.category === activeCategory);
-    if (activeBrand !== "all") list = list.filter((p) => p.brand === activeBrand);
-    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-    if (sort === "featured") list.sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+    let list = [...products];
+    if (activeCategory !== "all") {
+      const type = CATEGORY_TYPE[activeCategory];
+      list = list.filter((p) => p.node.productType === type);
+    }
+    if (activeBrand !== "all") {
+      const vendor = BRAND_VENDOR[activeBrand];
+      list = list.filter((p) => p.node.vendor === vendor);
+    }
+    const priceOf = (p: typeof list[number]) =>
+      parseFloat(p.node.priceRange.minVariantPrice.amount);
+    if (sort === "price-asc") list.sort((a, b) => priceOf(a) - priceOf(b));
+    if (sort === "price-desc") list.sort((a, b) => priceOf(b) - priceOf(a));
     return list;
-  }, [activeCategory, activeBrand, sort]);
+  }, [products, activeCategory, activeBrand, sort]);
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params);
@@ -41,7 +52,6 @@ const Shop = () => {
       />
 
       <section className="container-tight py-12">
-        {/* Filters */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-eyebrow mr-2">{t("shop.category")}</span>
@@ -91,7 +101,7 @@ const Shop = () => {
           </div>
         </div>
 
-        <ProductGrid products={filtered} emptyMessage={t("shop.emptyFilters")} />
+        <ProductGrid products={filtered} loading={isLoading} emptyMessage={t("shop.emptyFilters")} />
       </section>
     </SiteLayout>
   );

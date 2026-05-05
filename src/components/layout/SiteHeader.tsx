@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CAR_BRANDS, CATEGORIES } from "@/data/catalog";
-import { useCart } from "@/context/CartContext";
+import { useCartStore } from "@/stores/cartStore";
+import { CartDrawer } from "@/components/shop/CartDrawer";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import {
   DropdownMenu,
@@ -28,7 +28,7 @@ const CATEGORY_STRIP = [
 
 export const SiteHeader = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { itemCount } = useCart();
+  const itemCount = useCartStore((s) => s.items.reduce((n, i) => n + i.quantity, 0));
   const { t } = useTranslation();
 
   return (
@@ -131,21 +131,23 @@ export const SiteHeader = () => {
               <LanguageToggle />
             </div>
 
-            <Button
-              asChild
-              variant="ghost"
-              size="icon"
-              className="relative h-10 w-10 text-brand-white hover:bg-brand-graphite hover:text-brand-white"
-            >
-              <Link to="/cart" aria-label={t("nav.openCart")}>
-                <ShoppingBag className="h-5 w-5" />
-                {itemCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-white px-1 text-[10px] font-semibold text-brand-black">
-                    {itemCount}
-                  </span>
-                )}
-              </Link>
-            </Button>
+            <CartDrawer
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative h-10 w-10 text-brand-white hover:bg-brand-graphite hover:text-brand-white"
+                  aria-label={t("nav.openCart")}
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  {itemCount > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-white px-1 text-[10px] font-semibold text-brand-black">
+                      {itemCount}
+                    </span>
+                  )}
+                </Button>
+              }
+            />
           </div>
         </div>
       </div>

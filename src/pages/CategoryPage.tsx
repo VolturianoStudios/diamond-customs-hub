@@ -3,13 +3,18 @@ import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { CATEGORIES, getProductsByCategory } from "@/data/catalog";
+import { CATEGORIES } from "@/data/catalog";
+import { CATEGORY_TYPE } from "@/lib/shopify";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { Button } from "@/components/ui/button";
 
 const CategoryPage = () => {
   const { slug = "" } = useParams();
   const category = CATEGORIES.find((c) => c.slug === slug);
-  const products = getProductsByCategory(slug);
+  const type = CATEGORY_TYPE[slug];
+  const { data: products = [], isLoading } = useShopifyProducts(
+    type ? `product_type:"${type}"` : undefined,
+  );
   const { t } = useTranslation();
 
   if (!category) {
@@ -29,7 +34,7 @@ const CategoryPage = () => {
     <SiteLayout>
       <PageHeader eyebrow={t("category.eyebrow")} title={category.name} description={category.description} />
       <section className="container-tight py-12">
-        <ProductGrid products={products} emptyMessage={t("category.empty")} />
+        <ProductGrid products={products} loading={isLoading} emptyMessage={t("category.empty")} />
       </section>
     </SiteLayout>
   );
