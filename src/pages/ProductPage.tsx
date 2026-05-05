@@ -53,7 +53,7 @@ const ProductPage = () => {
 
   const variants = product.variants.edges.map((e) => e.node);
   const selectedVariant = variants.find((v) => v.id === variantId) ?? variants[0];
-  const image = product.images.edges[0]?.node;
+  const image = selectedVariant?.image ?? product.images.edges[0]?.node;
   const compareAt = selectedVariant?.compareAtPrice;
   const onSale =
     compareAt &&
