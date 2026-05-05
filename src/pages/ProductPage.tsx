@@ -1,22 +1,42 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, Check, ExternalLink, Loader2, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useCart } from "@/context/CartContext";
-import { getProductBySlug, PRODUCTS } from "@/data/catalog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useShopifyProduct, useShopifyProducts } from "@/hooks/useShopifyProducts";
+import { useCartStore } from "@/stores/cartStore";
+import { formatShopifyPrice } from "@/lib/shopify";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { formatPrice } from "@/lib/format";
 import { toast } from "sonner";
 
 const ProductPage = () => {
-  const { slug = "" } = useParams();
-  const product = getProductBySlug(slug);
-  const { add } = useCart();
-  const [qty, setQty] = useState(1);
+  const { handle = "" } = useParams();
+  const { data: product, isLoading } = useShopifyProduct(handle);
+  const { data: allProducts = [] } = useShopifyProducts();
+  const addItem = useCartStore((s) => s.addItem);
+  const cartIsLoading = useCartStore((s) => s.isLoading);
   const { t } = useTranslation();
+
+  const [variantId, setVariantId] = useState<string | null>(null);
+  const [qty, setQty] = useState(1);
+
+  if (isLoading) {
+    return (
+      <SiteLayout>
+        <section className="container-tight grid gap-12 py-12 lg:grid-cols-2">
+          <Skeleton className="aspect-square w-full" />
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-2/3" />
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+        </section>
+      </SiteLayout>
+    );
+  }
 
   if (!product) {
     return (
@@ -31,11 +51,38 @@ const ProductPage = () => {
     );
   }
 
-  const related = PRODUCTS.filter(
-    (p) => p.id !== product.id && (p.category === product.category || p.brand === product.brand),
-  ).slice(0, 4);
+  const variants = product.variants.edges.map((e) => e.node);
+  const selectedVariant = variants.find((v) => v.id === variantId) ?? variants[0];
+  const image = product.images.edges[0]?.node;
+  const compareAt = selectedVariant?.compareAtPrice;
+  const onSale =
+    compareAt &&
+    selectedVariant &&
+    parseFloat(compareAt.amount) > parseFloat(selectedVariant.price.amount);
 
-  const onSale = product.compareAtPrice && product.compareAtPrice > product.price;
+  const related = allProducts
+    .filter(
+      (p) =>
+        p.node.id !== product.id &&
+        (p.node.productType === product.productType || p.node.vendor === product.vendor),
+    )
+    .slice(0, 4);
+
+  const handleAdd = async () => {
+    if (!selectedVariant) return;
+    await addItem({
+      product: { node: product },
+      variantId: selectedVariant.id,
+      variantTitle: selectedVariant.title,
+      price: selectedVariant.price,
+      quantity: qty,
+      selectedOptions: selectedVariant.selectedOptions || [],
+    });
+    toast.success(t("product.addedToCart", { name: product.title }));
+  };
+
+  const showVariantPicker =
+    variants.length > 1 || (variants[0] && variants[0].title !== "Default Title");
 
   return (
     <SiteLayout>
@@ -50,37 +97,64 @@ const ProductPage = () => {
 
       <section className="container-tight grid gap-12 pb-16 lg:grid-cols-2 lg:pb-24">
         <div className="overflow-hidden rounded-md border border-border bg-secondary">
-          <img
-            src={product.images[0] ?? "/placeholder.svg"}
-            alt={product.name}
-            width={800}
-            height={800}
-            className="aspect-square w-full object-cover"
-          />
+          {image ? (
+            <img
+              src={image.url}
+              alt={image.altText ?? product.title}
+              className="aspect-square w-full object-cover"
+            />
+          ) : (
+            <div className="flex aspect-square w-full items-center justify-center text-sm text-muted-foreground">
+              {product.title}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col">
-          <p className="text-eyebrow mb-2">
-            {product.brand === "universal" ? t("common.universal") : product.brand.toUpperCase()}
-          </p>
+          {product.vendor && <p className="text-eyebrow mb-2">{product.vendor}</p>}
           <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-            {product.name}
+            {product.title}
           </h1>
 
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="font-display text-3xl font-semibold">
-              {formatPrice(product.price, product.currency)}
-            </span>
+            {selectedVariant && (
+              <span className="font-display text-3xl font-semibold">
+                {formatShopifyPrice(selectedVariant.price)}
+              </span>
+            )}
             {onSale && (
               <span className="text-sm text-muted-foreground line-through">
-                {formatPrice(product.compareAtPrice!, product.currency)}
+                {formatShopifyPrice(compareAt!)}
               </span>
             )}
           </div>
 
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground">{product.description}</p>
+          {product.description && (
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              {product.description}
+            </p>
+          )}
 
           <Separator className="my-8" />
+
+          {showVariantPicker && (
+            <div className="mb-6 flex flex-wrap gap-2">
+              {variants.map((v) => {
+                const active = (variantId ?? variants[0]?.id) === v.id;
+                return (
+                  <Button
+                    key={v.id}
+                    variant={active ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setVariantId(v.id)}
+                    disabled={!v.availableForSale}
+                  >
+                    {v.title}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="inline-flex items-center rounded-md border border-border">
@@ -104,20 +178,26 @@ const ProductPage = () => {
             <Button
               size="lg"
               className="flex-1"
-              onClick={() => {
-                add(product.id, qty);
-                toast.success(t("product.addedToCart", { name: product.name }));
-              }}
-              disabled={!product.inStock}
+              onClick={handleAdd}
+              disabled={cartIsLoading || !selectedVariant?.availableForSale}
             >
-              {product.inStock ? t("product.addToCart") : t("product.outOfStock")}
+              {cartIsLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : selectedVariant?.availableForSale ? (
+                <>
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  {t("product.addToCart")}
+                </>
+              ) : (
+                t("product.outOfStock")
+              )}
             </Button>
           </div>
 
           <ul className="mt-8 space-y-3 text-sm">
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-foreground" />
-              {t("product.inStock")}
+              {selectedVariant?.availableForSale ? t("product.inStock") : t("product.outOfStock")}
             </li>
             <li className="flex items-center gap-2">
               <Truck className="h-4 w-4 text-foreground" />

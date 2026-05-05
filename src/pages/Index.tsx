@@ -5,11 +5,12 @@ import heroImage from "@/assets/hero.jpg";
 import { Button } from "@/components/ui/button";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { CAR_BRANDS, CATEGORIES, getFeaturedProducts } from "@/data/catalog";
+import { CAR_BRANDS, CATEGORIES } from "@/data/catalog";
 import { BrandLogo } from "@/components/shop/BrandLogo";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 
 const Index = () => {
-  const featured = getFeaturedProducts();
+  const { data: featured = [], isLoading } = useShopifyProducts(undefined, 8);
   const { t } = useTranslation();
 
   return (
@@ -153,7 +154,7 @@ const Index = () => {
             {t("common.viewAll")} →
           </Link>
         </div>
-        <ProductGrid products={featured} />
+        <ProductGrid products={featured} loading={isLoading} />
       </section>
 
       {/* CTA */}

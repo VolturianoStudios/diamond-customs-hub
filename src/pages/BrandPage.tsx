@@ -2,14 +2,18 @@ import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { CAR_BRANDS, getProductsByBrand } from "@/data/catalog";
-import { BrandLogo } from "@/components/shop/BrandLogo";
+import { CAR_BRANDS } from "@/data/catalog";
+import { BRAND_VENDOR } from "@/lib/shopify";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { Button } from "@/components/ui/button";
 
 const BrandPage = () => {
   const { slug = "" } = useParams();
   const brand = CAR_BRANDS.find((b) => b.slug === slug);
-  const products = getProductsByBrand(slug);
+  const vendor = BRAND_VENDOR[slug];
+  const { data: products = [], isLoading } = useShopifyProducts(
+    vendor ? `vendor:"${vendor}"` : undefined,
+  );
   const { t } = useTranslation();
 
   if (!brand) {
@@ -47,7 +51,7 @@ const BrandPage = () => {
         </div>
       </section>
       <section className="container-tight py-12">
-        <ProductGrid products={products} emptyMessage={t("brand.empty")} />
+        <ProductGrid products={products} loading={isLoading} emptyMessage={t("brand.empty")} />
       </section>
     </SiteLayout>
   );
