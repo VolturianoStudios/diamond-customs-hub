@@ -31,5 +31,8 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/assets/car-logos-dataset-master"
   ]
 }

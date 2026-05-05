@@ -16,10 +16,17 @@ export type CategorySlug =
   | "ambient-lighting"
   | "cleaning";
 
+export interface CarBrandLogo {
+  thumb: string;
+  optimized: string;
+  original: string;
+}
+
 export interface CarBrand {
   slug: CarBrandSlug;
   name: string;
   tagline?: string;
+  logo: CarBrandLogo;
 }
 
 export interface Category {
