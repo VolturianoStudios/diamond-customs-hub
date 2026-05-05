@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { CAR_BRANDS, CATEGORIES, getFeaturedProducts } from "@/data/catalog";
+import { BrandLogo } from "@/components/shop/BrandLogo";
 
 const Index = () => {
   const featured = getFeaturedProducts();
@@ -95,10 +96,10 @@ const Index = () => {
             <Link
               key={brand.slug}
               to={`/brand/${brand.slug}`}
-              className="group flex aspect-square flex-col items-center justify-center rounded-md border border-border bg-card p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant"
+              className="group flex aspect-square flex-col items-center justify-center gap-3 rounded-md border border-border bg-card p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant"
             >
-              <span className="font-display text-xl font-semibold tracking-wide">{brand.name}</span>
-              <span className="mt-2 text-xs text-muted-foreground transition-colors group-hover:text-foreground">
+              <BrandLogo brand={brand} size="md" />
+              <span className="text-xs uppercase tracking-wider text-muted-foreground transition-colors group-hover:text-foreground">
                 {t("common.shop")} →
               </span>
             </Link>

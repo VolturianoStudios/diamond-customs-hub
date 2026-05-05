@@ -1,9 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { CAR_BRANDS, getProductsByBrand } from "@/data/catalog";
+import { BrandLogo } from "@/components/shop/BrandLogo";
 import { Button } from "@/components/ui/button";
 
 const BrandPage = () => {
@@ -27,7 +27,15 @@ const BrandPage = () => {
 
   return (
     <SiteLayout>
-      <PageHeader eyebrow={t("brand.eyebrow")} title={brand.name} description={brand.tagline} />
+      <section className="border-b border-border bg-secondary">
+        <div className="container-tight flex flex-col items-center gap-5 py-16 text-center md:py-20">
+          <p className="text-eyebrow">{t("brand.eyebrow")}</p>
+          <BrandLogo brand={brand} size="lg" />
+          {brand.tagline && (
+            <p className="max-w-md text-sm text-muted-foreground">{brand.tagline}</p>
+          )}
+        </div>
+      </section>
       <section className="container-tight py-12">
         <ProductGrid products={products} emptyMessage={t("brand.empty")} />
       </section>

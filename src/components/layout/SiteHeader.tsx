@@ -60,7 +60,15 @@ export const SiteHeader = () => {
                 <DropdownMenuLabel>{t("nav.shopByCar")}</DropdownMenuLabel>
                 {CAR_BRANDS.map((b) => (
                   <DropdownMenuItem key={b.slug} asChild>
-                    <Link to={`/brand/${b.slug}`}>{b.name}</Link>
+                    <Link to={`/brand/${b.slug}`} className="flex items-center gap-3">
+                      <img
+                        src={b.logo.thumb}
+                        alt=""
+                        className="h-6 w-6 object-contain"
+                        loading="lazy"
+                      />
+                      <span>{b.name}</span>
+                    </Link>
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
