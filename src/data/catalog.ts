@@ -1,11 +1,27 @@
 import type { CarBrand, Category, Product } from "./types";
 
+import bmwThumb from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/thumb/bmw.png";
+import bmwOpt from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/optimized/bmw.png";
+import bmwOrig from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/original/bmw.png";
+import mercThumb from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/thumb/mercedes-benz.png";
+import mercOpt from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/optimized/mercedes-benz.png";
+import mercOrig from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/original/mercedes-benz.png";
+import audiThumb from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/thumb/audi.png";
+import audiOpt from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/optimized/audi.png";
+import audiOrig from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/original/audi.png";
+import volvoThumb from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/thumb/volvo.png";
+import volvoOpt from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/optimized/volvo.png";
+import volvoOrig from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/original/volvo.png";
+import vwThumb from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/thumb/volkswagen.png";
+import vwOpt from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/optimized/volkswagen.png";
+import vwOrig from "@/assets/car-logos-dataset-master/car-logos-dataset-master/logos/original/volkswagen.png";
+
 export const CAR_BRANDS: CarBrand[] = [
-  { slug: "bmw", name: "BMW", tagline: "The Ultimate Driving Machine" },
-  { slug: "mercedes", name: "Mercedes-Benz", tagline: "The Best or Nothing" },
-  { slug: "audi", name: "Audi", tagline: "Vorsprung durch Technik" },
-  { slug: "volvo", name: "Volvo", tagline: "Designed Around You" },
-  { slug: "volkswagen", name: "Volkswagen", tagline: "Das Auto" },
+  { slug: "bmw", name: "BMW", tagline: "The Ultimate Driving Machine", logo: { thumb: bmwThumb, optimized: bmwOpt, original: bmwOrig } },
+  { slug: "mercedes", name: "Mercedes-Benz", tagline: "The Best or Nothing", logo: { thumb: mercThumb, optimized: mercOpt, original: mercOrig } },
+  { slug: "audi", name: "Audi", tagline: "Vorsprung durch Technik", logo: { thumb: audiThumb, optimized: audiOpt, original: audiOrig } },
+  { slug: "volvo", name: "Volvo", tagline: "Designed Around You", logo: { thumb: volvoThumb, optimized: volvoOpt, original: volvoOrig } },
+  { slug: "volkswagen", name: "Volkswagen", tagline: "Das Auto", logo: { thumb: vwThumb, optimized: vwOpt, original: vwOrig } },
 ];
 
 export const CATEGORIES: Category[] = [
