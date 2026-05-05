@@ -188,9 +188,10 @@ export const SiteHeader = () => {
                   <Link
                     to={`/brand/${b.slug}`}
                     onClick={() => setMobileOpen(false)}
-                    className="block rounded-md border border-border px-3 py-2 text-sm font-medium"
+                    className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-sm font-medium"
                   >
-                    {b.name}
+                    <img src={b.logo.thumb} alt="" className="h-6 w-6 object-contain" loading="lazy" />
+                    <span>{b.name}</span>
                   </Link>
                 </li>
               ))}
