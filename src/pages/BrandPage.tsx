@@ -28,12 +28,14 @@ const BrandPage = () => {
   return (
     <SiteLayout>
       <section className="border-b border-border bg-secondary">
-        <div className="container-tight flex flex-col items-center gap-5 py-16 text-center md:py-20">
-          <p className="text-eyebrow">{t("brand.eyebrow")}</p>
-          <BrandLogo brand={brand} size="lg" />
-          {brand.tagline && (
-            <p className="max-w-md text-sm text-muted-foreground">{brand.tagline}</p>
-          )}
+        <div className="container-tight flex items-center gap-6 py-8 md:gap-8 md:py-10">
+          <BrandLogo brand={brand} size="sm" className="h-16 w-16 shrink-0 md:h-20 md:w-20" />
+          <div className="flex flex-col gap-1">
+            <p className="text-eyebrow">{t("brand.eyebrow")}</p>
+            {brand.tagline && (
+              <p className="text-sm text-muted-foreground md:text-base">{brand.tagline}</p>
+            )}
+          </div>
         </div>
       </section>
       <section className="container-tight py-12">
