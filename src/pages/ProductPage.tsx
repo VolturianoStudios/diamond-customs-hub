@@ -137,20 +137,55 @@ const ProductPage = () => {
 
           <Separator className="my-8" />
 
-          {showVariantPicker && (
-            <div className="mb-6 flex flex-wrap gap-2">
-              {variants.map((v) => {
-                const active = (variantId ?? variants[0]?.id) === v.id;
+          {showVariantPicker && product.options && product.options.length > 0 && (
+            <div className="mb-6 space-y-5">
+              {product.options.map((opt) => {
+                const currentValue =
+                  selectedVariant?.selectedOptions.find((o) => o.name === opt.name)?.value;
                 return (
-                  <Button
-                    key={v.id}
-                    variant={active ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setVariantId(v.id)}
-                    disabled={!v.availableForSale}
-                  >
-                    {v.title}
-                  </Button>
+                  <div key={opt.name}>
+                    <p className="mb-2 text-sm">
+                      <span className="font-semibold">{opt.name}:</span>{" "}
+                      <span className="text-muted-foreground">{currentValue}</span>
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {opt.values.map((value) => {
+                        const active = currentValue === value;
+                        // Find variant matching: keep other selected options, swap this one.
+                        const targetOptions = selectedVariant?.selectedOptions.map((o) =>
+                          o.name === opt.name ? { ...o, value } : o,
+                        );
+                        const targetVariant = variants.find((v) =>
+                          v.selectedOptions.every(
+                            (o) =>
+                              targetOptions?.find(
+                                (t) => t.name === o.name && t.value === o.value,
+                              ),
+                          ),
+                        );
+                        const unavailable = !targetVariant || !targetVariant.availableForSale;
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => targetVariant && setVariantId(targetVariant.id)}
+                            disabled={!targetVariant}
+                            className={
+                              "min-w-[64px] rounded-md border px-4 py-2 text-sm transition-colors " +
+                              (active
+                                ? "border-foreground bg-foreground text-background"
+                                : "border-border bg-background hover:border-foreground") +
+                              (unavailable && !active
+                                ? " text-muted-foreground line-through opacity-60"
+                                : "")
+                            }
+                          >
+                            {value}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 );
               })}
             </div>
