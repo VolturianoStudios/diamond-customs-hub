@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Logo } from "@/components/brand/Logo";
+import { Button } from "@/components/ui/button";
 import { CATEGORIES, CAR_BRANDS } from "@/data/catalog";
 
 export const SiteFooter = () => {
@@ -14,6 +15,9 @@ export const SiteFooter = () => {
           <p className="max-w-xs text-sm leading-relaxed text-white/60">
             {t("footer.tagline")}
           </p>
+          <Button asChild variant="secondary" size="sm">
+            <Link to="/contact">Boka en konsultation</Link>
+          </Button>
         </div>
 
         <div>
