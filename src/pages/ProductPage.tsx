@@ -22,6 +22,7 @@ const ProductPage = () => {
 
   const [variantId, setVariantId] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
+  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -53,7 +54,11 @@ const ProductPage = () => {
 
   const variants = product.variants.edges.map((e) => e.node);
   const selectedVariant = variants.find((v) => v.id === variantId) ?? variants[0];
-  const image = selectedVariant?.image ?? product.images.edges[0]?.node;
+  const galleryImages = product.images.edges.map((e) => e.node);
+  const fallbackImage = selectedVariant?.image ?? galleryImages[0];
+  const image = activeImageUrl
+    ? galleryImages.find((i) => i.url === activeImageUrl) ?? fallbackImage
+    : fallbackImage;
   const compareAt = selectedVariant?.compareAtPrice;
   const onSale =
     compareAt &&
@@ -96,16 +101,42 @@ const ProductPage = () => {
       </section>
 
       <section className="container-tight grid gap-12 pb-16 lg:grid-cols-2 lg:pb-24">
-        <div className="overflow-hidden rounded-md border border-border bg-secondary">
-          {image ? (
-            <img
-              src={image.url}
-              alt={image.altText ?? product.title}
-              className="aspect-square w-full object-cover"
-            />
-          ) : (
-            <div className="flex aspect-square w-full items-center justify-center text-sm text-muted-foreground">
-              {product.title}
+        <div className="space-y-3">
+          <div className="overflow-hidden rounded-md border border-border bg-secondary">
+            {image ? (
+              <img
+                src={image.url}
+                alt={image.altText ?? product.title}
+                className="aspect-square w-full object-cover"
+              />
+            ) : (
+              <div className="flex aspect-square w-full items-center justify-center text-sm text-muted-foreground">
+                {product.title}
+              </div>
+            )}
+          </div>
+          {galleryImages.length > 1 && (
+            <div className="grid grid-cols-5 gap-2">
+              {galleryImages.map((img) => {
+                const active = image?.url === img.url;
+                return (
+                  <button
+                    key={img.url}
+                    type="button"
+                    onClick={() => setActiveImageUrl(img.url)}
+                    className={
+                      "overflow-hidden rounded-md border bg-secondary transition-colors " +
+                      (active ? "border-foreground" : "border-border hover:border-foreground")
+                    }
+                  >
+                    <img
+                      src={img.url}
+                      alt={img.altText ?? product.title}
+                      className="aspect-square w-full object-cover"
+                    />
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
