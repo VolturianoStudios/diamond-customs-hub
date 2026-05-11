@@ -52,7 +52,7 @@ const Index = () => {
 
 
       {/* Shop by car */}
-      <section className="container-tight py-16 md:py-24">
+      <section className="container-tight pb-16 pt-6 md:pb-24 md:pt-10">
         <div className="mb-10 flex items-end justify-between gap-6">
           <div>
             <p className="text-eyebrow mb-3">{t("home.shopByCarEyebrow")}</p>
