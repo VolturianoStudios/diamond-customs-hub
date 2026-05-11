@@ -133,25 +133,7 @@ const Index = () => {
         <ProductGrid products={featured} loading={isLoading} />
       </section>
 
-      {/* CTA */}
-      <section className="bg-brand-black text-brand-white">
-        <div className="container-tight grid gap-8 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <p className="text-eyebrow mb-3 text-white/60">{t("home.ctaEyebrow")}</p>
-            <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              {t("home.ctaTitle")}
-            </h2>
-            <p className="mt-4 max-w-md text-white/70">
-              {t("home.ctaText")}
-            </p>
-          </div>
-          <div className="flex items-end md:justify-end">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/contact">{t("home.ctaButton")}</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+
 
       {/* Trust strip (above footer) */}
       <section className="border-t border-border bg-background">
