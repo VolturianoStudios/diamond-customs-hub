@@ -25,7 +25,7 @@ const Index = () => {
           className="absolute inset-0 h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-hero" />
-        <div className="container-tight relative z-10 flex min-h-[68vh] flex-col items-center pb-12 pt-28 text-center md:pt-36">
+        <div className="container-tight relative z-10 flex min-h-[68vh] flex-col items-center pb-12 pt-32 text-center md:pt-44">
           <div className="flex flex-col items-center animate-fade-in-up">
             <h1 className="font-display text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
               Diamond Customs
