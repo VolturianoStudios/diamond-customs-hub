@@ -25,23 +25,23 @@ const Index = () => {
           className="absolute inset-0 h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-hero" />
-        <div className="container-tight relative z-10 flex min-h-[78vh] flex-col items-center justify-center pb-16 pt-32 text-center md:pb-24">
-          <div className="flex max-w-3xl flex-col items-center animate-fade-in-up">
-            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
+        <div className="container-tight relative z-10 flex min-h-[88vh] flex-col items-center pb-16 pt-28 text-center md:pt-36">
+          <div className="flex flex-col items-center animate-fade-in-up">
+            <h1 className="font-display text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">
               Diamond Customs
             </h1>
-            <p className="mt-6 max-w-xl text-base text-white/80 md:text-lg">
-              {t("home.heroDescription")}
+            <p className="mt-3 text-sm text-white/85 md:text-base">
+              Premiumdelar designade för entusiaster.
             </p>
-            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Button asChild size="lg" variant="secondary" className="w-56">
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button asChild size="lg" variant="secondary" className="w-60">
                 <Link to="/shop">{t("home.shopCollection")}</Link>
               </Button>
               <Button
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-56 border-white/30 bg-transparent text-white hover:bg-white hover:text-brand-black"
+                className="w-60 border-white/30 bg-transparent text-white hover:bg-white hover:text-brand-black"
               >
                 <Link to="/about">{t("home.ourStory")}</Link>
               </Button>
