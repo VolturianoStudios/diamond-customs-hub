@@ -50,24 +50,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Trust strip */}
-      <section className="border-b border-border bg-background">
-        <div className="container-tight grid gap-6 py-8 sm:grid-cols-3">
-          {[
-            { icon: ShieldCheck, title: t("home.trust.qualityTitle"), text: t("home.trust.qualityText") },
-            { icon: Truck, title: t("home.trust.shippingTitle"), text: t("home.trust.shippingText") },
-            { icon: Sparkles, title: t("home.trust.enthusiastsTitle"), text: t("home.trust.enthusiastsText") },
-          ].map((f) => (
-            <div key={f.title} className="flex items-start gap-3">
-              <f.icon className="mt-0.5 h-5 w-5" />
-              <div>
-                <p className="text-sm font-semibold">{f.title}</p>
-                <p className="text-sm text-muted-foreground">{f.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Shop by car */}
       <section className="container-tight py-16 md:py-24">
